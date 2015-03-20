@@ -144,7 +144,6 @@
       node.sort(function (a, b) {return options.data.eval(b.item) - options.data.eval(a.item);});
 
       self.transition = {};
-      self.event = $.microObserver.get($.misc.uuid());
 
       if (options.supportResponsive) {
         $(window).resize(function() {
@@ -201,7 +200,6 @@
 
     handleClick: function (node) {
       this.clickedNode = d3.select(node);
-      this.event.send("click", this.clickedNode);
       this.reset(this.centralNode);
       this.moveToCentral(this.clickedNode);
       this.moveToReflection(this.svg.selectAll(".node:not(.active)"), this.swapped);
