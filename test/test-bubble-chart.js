@@ -11,8 +11,8 @@ $(document).ready(function () {
     //intersectDelta: use @default
     //intersectInc: use @default
     //circleColor: use @default
-    centralClickMethod: function (node) {
-      alert("this method is sweet");
+    centralClickMethod: function (node, label) {
+      alert(label);
     },
     data: {
       items: [
