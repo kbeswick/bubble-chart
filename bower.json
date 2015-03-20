@@ -1,7 +1,7 @@
 {
   "name": "bubble-chart",
   "version": "1.0",
-  "main": ["src/bubble-chart.js", "src/plugins/lines/lines.js", "src/plugins/central-click/central-click.js"],
+  "main": ["src/bubble-chart.js"],
   "authors": [
     "Phuong H <phuonghqh@gmail.com>"
   ],
@@ -25,6 +25,5 @@
     "d3": "latest",
     "d3-transform": "latest",
     "cafej": "latest",
-    "microplugin": "latest"
   }
 }
