@@ -116,6 +116,7 @@
     setup: function () {
       var self = this;
       var options = self.options;
+      self.swapped = false;
       self.innerRadius = options.innerRadius;
       self.outerRadius = options.outerRadius;
       self.centralPoint = options.size / 2;
@@ -176,7 +177,7 @@
         .attr('r', function (d) {return self.options.innerRadius;});
     },
 
-    moveToReflection: function (node, swapped) {
+    moveToReflection: function (node) {
       var self = this;
       var toReflectionPoint = d3.svg.transform()
         .translate(function (d) {
@@ -188,7 +189,7 @@
       node.transition()
         .duration(self.options.transitDuration)
         .delay(function (d, i) {return i * 10;})
-        .attr('transform', swapped ? "" : toReflectionPoint)
+        .attr('transform', self.swapped ? "" : toReflectionPoint)
         .select("circle")
         .attr('r', function (d) {return d.r;});
     },
@@ -198,16 +199,19 @@
       node.classed({active: false});
     },
 
+    handleClick: function (node) {
+      this.clickedNode = d3.select(node);
+      this.event.send("click", this.clickedNode);
+      this.reset(this.centralNode);
+      this.moveToCentral(this.clickedNode);
+      this.moveToReflection(this.svg.selectAll(".node:not(.active)"), this.swapped);
+      this.swapped = !this.swapped;
+    },
+
     registerClickEvent: function (node) {
       var self = this;
-      var swapped = false;
       node.style("cursor", "pointer").on("click", function (d) {
-        self.clickedNode = d3.select(this);
-        self.event.send("click", self.clickedNode);
-        self.reset(self.centralNode);
-        self.moveToCentral(self.clickedNode);
-        self.moveToReflection(self.svg.selectAll(".node:not(.active)"), swapped);
-        swapped = !swapped;
+        self.handleClick(this);
       });
     },
 
