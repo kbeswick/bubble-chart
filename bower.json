@@ -24,6 +24,6 @@
     "jquery": "latest",
     "d3": "latest",
     "d3-transform": "latest",
-    "cafej": "latest",
+    "cafej": "latest"
   }
 }
