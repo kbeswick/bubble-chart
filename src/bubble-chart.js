@@ -1,14 +1,4 @@
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['microplugin'], factory);
-  }
-  else if (typeof exports === 'object') {
-    module.exports = factory(require('microplugin'));
-  }
-  else {
-    root.BubbleChart = factory(root.MicroPlugin);
-  }
-}(this, function (MicroPlugin) {
+(this, function () {
   var pi2 = Math.PI * 2;
   /**
    * Bubble Chart implementation using {@link d3js.org|d3js}
@@ -41,8 +31,6 @@
       radiusMax: (self.options.outerRadius - self.options.innerRadius) / 2,
       intersectInc: self.options.intersectDelta
     }, settings);
-
-    self.initializePlugins(self.options.plugins);
 
     self.setup();
     self.registerClickEvent(self.getNodes());
@@ -153,6 +141,17 @@
         });
         $(window).resize();
       }
+
+      //lines plugin
+      var node = self.getNodes();
+      $.each(options.linesFormat, function (i, f) {
+        node.append("text")
+          .classed(f.classed)
+          .style(f.style)
+          .attr(f.attr)
+          .text(function (d) {return d.item[f.textField];});
+      });
+
     },
 
     getCirclePositions: function () {
@@ -174,6 +173,28 @@
       self.transition.centralNode.attr('transform', toCentralPoint)
         .select("circle")
         .attr('r', function (d) {return self.options.innerRadius;});
+
+      //central-click
+      self.transition.centralNode.each("end", function() {
+        node.append("text").classed({"central-click": true})
+          .attr(self.options.centralClick.attr)
+          .style(self.options.centralClick.style)
+          .attr("x", function (d) {return d.cx;})
+          .attr("y", function (d) {return d.cy;})
+          .text(self.options.centralClick.text)
+          .style("opacity", 0).transition().duration(self.getOptions().transitDuration / 2).style("opacity", "0.8");
+      });
+
+      //lines plugin
+      $.each(self.options.centralFormat, function (i, f) {
+        var tNode = d3.select(node.selectAll("text")[0][i]);
+        tNode.transition().duration(self.getOptions().transitDuration)
+          .style(f.style)
+          .attr(f.attr);
+        f.classed !== undefined && tNode.classed(f.classed);
+        f.textField !== undefined && tNode.text(function (d) {return d.item[f.textField];});
+      });
+
     },
 
     moveToReflection: function (node) {
@@ -196,14 +217,34 @@
     reset: function (node) {
       var self = this;
       node.classed({active: false});
+
+      //central-click
+      node.select("text.central-click").remove();
+
+      //lines plugin
+      $.each(self.options.linesFormat, function (i, f) {
+        var tNode = d3.select(node.selectAll("text")[0][i]);
+        tNode.classed(f.classed).text(function (d) {return d.item[f.textField];})
+          .transition().duration(self.getOptions().transitDuration)
+          .style(f.style)
+          .attr(f.attr);
+      });
+
     },
 
     handleClick: function (node) {
+      //FIXME
       this.clickedNode = d3.select(node);
-      this.reset(this.centralNode);
-      this.moveToCentral(this.clickedNode);
-      this.moveToReflection(this.svg.selectAll(".node:not(.active)"), this.swapped);
-      this.swapped = !this.swapped;
+
+      if (this.clickedNode.selectAll("text.central-click")[0].length === 1) {
+        alert("Hello there!\nCentral bubble is clicked.");
+      }
+      else {
+        this.reset(this.centralNode);
+        this.moveToCentral(this.clickedNode);
+        this.moveToReflection(this.svg.selectAll(".node:not(.active)"), this.swapped);
+        this.swapped = !this.swapped;
+      }
     },
 
     registerClickEvent: function (node) {
@@ -222,10 +263,8 @@
     }
   });
 
-  MicroPlugin.mixin(d3.svg.BubbleChart);
-
   return d3.svg.BubbleChart;
-}));
+})();
 /**
  * Settings of bubble chart
  *
