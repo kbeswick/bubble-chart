@@ -11,6 +11,9 @@ $(document).ready(function () {
     //intersectDelta: use @default
     //intersectInc: use @default
     //circleColor: use @default
+    centralClickMethod: function (node) {
+      alert("this method is sweet");
+    },
     data: {
       items: [
         {text: "Java", count: "236"},

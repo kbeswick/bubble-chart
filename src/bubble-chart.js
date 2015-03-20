@@ -24,7 +24,10 @@
       outerRadius: defaultOuterRadius,
       radiusMin: defaultRadiusMin,
       intersectDelta: 0,
-      transitDuration: 1000
+      transitDuration: 1000,
+      centralClickMethod: function () {
+        alert("sup");
+      },
     }, settings);
 
     $.extend(self.options, {
@@ -110,6 +113,7 @@
       self.centralPoint = options.size / 2;
       self.intervalMax = options.size * options.size;
       self.items = options.data.items;
+      self.centralClickMethod = options.centralClickMethod;
       self.values = self.getValues();
       self.valueMax = self.values.max();
       self.svg = d3.select(options.container).append("svg")
@@ -237,7 +241,7 @@
       this.clickedNode = d3.select(node);
 
       if (this.clickedNode.selectAll("text.central-click")[0].length === 1) {
-        alert("Hello there!\nCentral bubble is clicked.");
+        this.centralClickMethod(node);
       }
       else {
         this.reset(this.centralNode);
