@@ -240,9 +240,8 @@
       //FIXME
       this.clickedNode = d3.select(node);
 
-      var label = this.clickedNode.selectAll("text.text")[0][0].innerHTML;
       if (this.clickedNode.selectAll("text.central-click")[0].length === 1) {
-        this.centralClickMethod(node, label);
+        this.centralClickMethod(node);
       }
       else {
         this.reset(this.centralNode);
