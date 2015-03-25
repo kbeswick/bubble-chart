@@ -185,7 +185,7 @@
           .style(self.options.centralClick.style)
           .attr("x", function (d) {return d.cx;})
           .attr("y", function (d) {return d.cy;})
-          .html(self.options.centralClick.label)
+          .text(self.options.centralClick.text)
           .style("opacity", 0).transition().duration(self.getOptions().transitDuration / 2).style("opacity", "0.8");
       });
 
