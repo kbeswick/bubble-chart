@@ -130,9 +130,9 @@
       node.append("circle")
         .attr({r: function (d) {return d.r;}, cx: function (d) {return d.cx;}, cy: function (d) {return d.cy;}})
         .style("fill", function (d) {
-          return options.data.color !== undefined ? options.data.color(d.item) : fnColor(d.item.text);
+          return d.item.color !== undefined ? d.item.color : fnColor(d.item.text);
         })
-        .attr("opacity", "0.8");
+        .attr("opacity", "1");
       node.sort(function (a, b) {return options.data.eval(b.item) - options.data.eval(a.item);});
 
       self.transition = {};
